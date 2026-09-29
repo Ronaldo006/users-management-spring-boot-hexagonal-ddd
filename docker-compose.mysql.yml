@@ -1,0 +1,39 @@
+# Variante con MySQL:   docker compose -f docker-compose.mysql.yml up --build
+services:
+  db:
+    image: mysql:8.4
+    container_name: users-mysql
+    environment:
+      MYSQL_DATABASE: crud_usuarios
+      MYSQL_ROOT_PASSWORD: 1234567
+    ports:
+      - "3307:3306"   # 3307 en tu PC para no chocar con un MySQL local
+    volumes:
+      - mysqldata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p1234567"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    container_name: users-management-api-mysql
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_ENGINE: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: crud_usuarios
+      DB_USERNAME: root
+      DB_PASSWORD: 1234567
+      SMTP_USERNAME: ${SMTP_USERNAME:-tu_correo@gmail.com}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-tu_app_password_aqui}
+      JWT_SECRET: ${JWT_SECRET:-ZGV2ZWxvcG1lbnQtb25seS1qd3Qtc2VjcmV0LW11c3QtYmUtcmVwbGFjZWQ=}
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysqldata:

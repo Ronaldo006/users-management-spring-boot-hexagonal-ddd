@@ -1,0 +1,28 @@
+# Blueprint de Render (opcional): Dashboard > New > Blueprint > seleccionar este repo
+services:
+  - type: web
+    name: users-management-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /v3/api-docs
+    envVars:
+      - key: DB_ENGINE
+        value: postgresql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSLMODE
+        value: require
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
