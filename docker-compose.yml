@@ -1,0 +1,43 @@
+# Levanta la API + PostgreSQL:   docker compose up --build
+# Swagger: http://localhost:8080/swagger-ui/index.html
+# Las credenciales SMTP se leen del archivo .env (copie .env.example a .env)
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: users-postgres
+    environment:
+      POSTGRES_DB: crud_usuarios
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234567
+    ports:
+      - "5433:5432"   # 5433 en tu PC para no chocar con un PostgreSQL local
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d crud_usuarios"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: users-management-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_ENGINE: postgresql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: crud_usuarios
+      DB_USERNAME: postgres
+      DB_PASSWORD: 1234567
+      DB_SSLMODE: disable
+      SMTP_USERNAME: ${SMTP_USERNAME:-tu_correo@gmail.com}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-tu_app_password_aqui}
+      JWT_SECRET: ${JWT_SECRET:-ZGV2ZWxvcG1lbnQtb25seS1qd3Qtc2VjcmV0LW11c3QtYmUtcmVwbGFjZWQ=}
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:

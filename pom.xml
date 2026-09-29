@@ -78,6 +78,12 @@
       <version>${mysql.connector.version}</version>
     </dependency>
 
+    <!-- PostgreSQL JDBC Driver — versión gestionada por el BOM de Spring Boot -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
+
     <!-- JavaMail API (javax.mail legacy — NO migrado a jakarta.mail, intencional) -->
     <dependency>
       <groupId>com.sun.mail</groupId>
