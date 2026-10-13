@@ -8,7 +8,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
+import org.springframework.scheduling.annotation.Async;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -33,6 +33,7 @@ public class EmailNotificationService {
 
   private final EmailSenderPort emailSenderPort;
 
+  @Async("notificationExecutor")
   public void notifyUserCreated(final UserModel user, final String plainPassword) {
     final String template = loadTemplate("user-created.html");
     final String body =
@@ -47,6 +48,7 @@ public class EmailNotificationService {
     sendOrLog(destination);
   }
 
+  @Async("notificationExecutor")
   public void notifyUserUpdated(final UserModel user) {
     final String template = loadTemplate("user-updated.html");
     final String body =
