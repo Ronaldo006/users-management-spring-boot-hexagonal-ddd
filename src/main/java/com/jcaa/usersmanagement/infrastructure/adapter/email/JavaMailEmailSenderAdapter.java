@@ -5,7 +5,7 @@ import com.jcaa.usersmanagement.domain.exception.EmailSenderException;
 import com.jcaa.usersmanagement.domain.model.EmailDestinationModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -19,6 +19,7 @@ import java.util.Properties;
 
 @Slf4j
 @Component
+@ConditionalOnProperty(name = "email.provider", havingValue = "smtp")
 public class JavaMailEmailSenderAdapter implements EmailSenderPort {
 
   private static final String MAIL_SMTP_HOST = "mail.smtp.host";
