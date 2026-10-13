@@ -53,4 +53,21 @@ class EmailSenderExceptionTest {
             assertFalse(
                 exception.getMessage().isBlank(), "el mensaje por defecto no debe estar vacío"));
   }
+
+  // ── becauseApiFailed()
+
+  @Test
+  @DisplayName("becauseApiFailed() debe incluir el email destino y el detalle de la API")
+  void shouldFormatMessageWithEmailAndApiDetail() {
+    // Act
+    final String message =
+            EmailSenderException.becauseApiFailed("user@example.com", "HTTP 500").getMessage();
+
+    // Assert
+    assertAll(
+            "becauseApiFailed",
+            () -> assertTrue(message.contains("user@example.com")),
+            () -> assertTrue(message.contains("HTTP 500")),
+            () -> assertTrue(message.contains("Brevo")));
+  }
 }
